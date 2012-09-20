@@ -238,8 +238,8 @@ static NSArray *BROWSER_SCHEMES, *SPECIAL_HOSTS;
  navigationType:(UIWebViewNavigationType)navigationType 
 {
 	MPLogDebug(@"Ad browser starting to load request %@", request.URL);
-	
-	/* 
+    
+    /* 
 	 * For all links with http:// or https:// scheme, open in our browser UNLESS
 	 * the host is one of our special hosts that should be handled by the OS.
 	 */
@@ -331,7 +331,12 @@ static NSArray *BROWSER_SCHEMES, *SPECIAL_HOSTS;
         [self performSelector:@selector(dismissBrowserAndOpenURL:) withObject:URL
                    afterDelay:kModalTransitionDelay];
     } else {
-        [self dismissBrowserAndOpenURL:URL];
+        BOOL isOnscreen = !!self.view.window;
+        if (isOnscreen) {
+            [self dismissBrowserAndOpenURL:URL];
+        } else {
+            [[UIApplication sharedApplication] openURL:URL];
+        }
     }
 }
 
